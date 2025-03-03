@@ -1,13 +1,12 @@
 🎵 **Echo** 🎵
 
-**Overview**
-A brief introduction to Echo, explaining what it does. Example:
+**Overview**: A brief introduction to Echo, explaining what it does. Example:
 "Echo is a web application that generates a music playlist based on user-inputted mood and aesthetic."
 
 **Features**
-🎶 Generate playlists based on text input.
-🎨 Uses AI to analyze mood and aesthetic.
-⚡ Fast and responsive UI built with Next.js.
+- 🎶 Generate playlists based on text input.
+- 🎨 Uses AI to analyze mood and aesthetic.
+- ⚡ Fast and responsive UI built with Next.js.
 
 **Installation**
 1. Prerequisites
