@@ -1,12 +1,19 @@
-"use client"
+"use client";
 
 import { useState } from "react";
+import { fetchOpenAIResponse } from "../utils/apiClient";
 
 export default function Home() {
   const [input, setInput] = useState("");
+  const [response, setResponse] = useState("");
 
-  const handleSubmit = () => {
-    console.log("User Input:", input);
+  const handleSubmit = async () => {
+    try {
+      const result = await fetchOpenAIResponse(input);
+      setResponse(result);
+    } catch (error) {
+      console.error('Error fetching data from backend:', error);
+    }
   };
 
   return (
@@ -40,6 +47,14 @@ export default function Home() {
           </svg>
         </button>
       </div>
+
+      {/* Response Display */}
+      {response && (
+        <div className="mt-8 p-4 bg-gray-700 text-white rounded-lg max-w-xl">
+          <h3 className="text-xl font-semibold mb-2">Response:</h3>
+          <p>{response}</p>
+        </div>
+      )}
     </div>
   );
 }
