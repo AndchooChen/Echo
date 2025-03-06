@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Echo",
-  description: "This is an app that creates playlists based on your mood.",
+  description: "An app that creates playlists based on your mood.",
 };
 
 export default function RootLayout({
