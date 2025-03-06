@@ -1,18 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { fetchOpenAIResponse } from "../utils/apiClient";
+import axios from 'axios';
 
 export default function Home() {
   const [input, setInput] = useState("");
-  const [response, setResponse] = useState("");
+  const [primaryEmotion, setPrimaryEmotion] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    try {
-      const result = await fetchOpenAIResponse(input);
-      setResponse(result);
-    } catch (error) {
-      console.error('Error fetching data from backend:', error);
+    if (input) {
+      setLoading(true);
+      try {
+        const res = await axios.post('/api/emotion', { input });
+        setPrimaryEmotion(res.data.primaryEmotion.label);
+      } catch (error) {
+        console.error('Error fetching emotion:', error);
+      }
+      setLoading(false);
     }
   };
 
@@ -41,18 +46,17 @@ export default function Home() {
         <button
           onClick={handleSubmit}
           className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-2 text-white border border-white rounded-lg hover:bg-white hover:text-black transition bg-transparent"
+          disabled={loading}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
+          {loading ? "Analyzing..." : "Analyze Emotion"}
         </button>
       </div>
 
       {/* Response Display */}
-      {response && (
+      {primaryEmotion && (
         <div className="mt-8 p-4 bg-gray-700 text-white rounded-lg max-w-xl">
-          <h3 className="text-xl font-semibold mb-2">Response:</h3>
-          <p>{response}</p>
+          <h3 className="text-xl font-semibold mb-2">Detected Emotion:</h3>
+          <p>{primaryEmotion}</p>
         </div>
       )}
     </div>
