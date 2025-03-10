@@ -1,34 +1,28 @@
-import { HfInference } from '@huggingface/inference';
-import { TextClassificationOutput } from '@huggingface/transformers';
+import { HfInference } from "@huggingface/inference";
 
-let hf: HfInference;
+const client = new HfInference(process.env.HuggingFace_Token);
 
-export async function POST(req: Request, res: Response) {
-    const { input } = await req.json();
-    const inferenceResponse: TextClassificationOutput = await runInference(input);
-    // console.log(inferenceResponse);
-    const primaryEmotion = firstEmotion(inferenceResponse);
+// Define an async function to run inference
+async function getSentenceSimilarity() {
+    const input = {
+        source_sentence: "That is a happy person",
+        sentences: [
+            "That is a happy dog",
+            "That is a very happy person",
+            "Today is a sunny day",
+        ],
+    };
 
-    return new Response(JSON.stringify({
-        inferenceResponse,
-        primaryEmotion
-    }), { status: 200 });
-}
-
-async function runInference(input: string) {
-    if (!hf) {
-        hf = new HfInference(process.env.HuggingFace_Token);
-    }
-
-    const model = "SamLowe/roberta-base-go_emotions";
-    const response = await hf.textClassification({
-        model: model,
+    // Use Hugging Face inference API through `HfInference`
+    const output = await client.sentenceSimilarity({
+        model: "sentence-transformers/all-MiniLM-L6-v2",
         inputs: input,
-    })
+        provider: "hf-inference",
+    });
 
-    return response;
+    console.log("Sentence Similarity Scores:", output);
+    return output;
 }
 
-function firstEmotion(emotions: TextClassificationOutput) {
-    return emotions[0];
-}
+// Call the function
+// getSentenceSimilarity().catch(console.error);
