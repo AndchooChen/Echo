@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export default function Home() {
   const [input, setInput] = useState("");
-  const [primaryEmotion, setPrimaryEmotion] = useState("");
+  const [bestMatch, setBestMatch] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -13,9 +13,9 @@ export default function Home() {
       setLoading(true);
       try {
         const res = await axios.post('/api/emotion', { input });
-        setPrimaryEmotion(res.data.primaryEmotion.label);
+        setBestMatch(res.data.bestMatch);
       } catch (error) {
-        console.error('Error fetching emotion:', error);
+        console.error('Error fetching playlist:', error);
       }
       setLoading(false);
     }
@@ -53,10 +53,10 @@ export default function Home() {
       </div>
 
       {/* Response Display */}
-      {primaryEmotion && (
+      {bestMatch && (
         <div className="mt-8 p-4 bg-gray-700 text-white rounded-lg max-w-xl">
-          <h3 className="text-xl font-semibold mb-2">Detected Emotion:</h3>
-          <p>{primaryEmotion}</p>
+          <h3 className="text-xl font-semibold mb-2">Best Matching Playlist:</h3>
+          <p>{bestMatch}</p>
         </div>
       )}
     </div>
