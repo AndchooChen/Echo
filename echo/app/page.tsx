@@ -39,7 +39,9 @@ export default function Home() {
         console.log(res.data.primaryEmotion.label);
 
         // Step 2: Get a song from Spotify based on the emotion
-        const songRes = await axios.post("/api/get-song", { mood: res.data.primaryEmotion.label });
+        //const songRes = await axios.post("/api/get-song", { mood: res.data.primaryEmotion.label });
+        const songRes = await axios.post("/api/getSongByAttributes");
+        console.log(songRes);
 
         if (songRes.data && songRes.data.track) {
           setSong({
