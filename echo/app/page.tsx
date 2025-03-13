@@ -8,7 +8,13 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [bestMatch, setBestMatch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [song, setSong] = useState({
+    image: "/cover.jpg",
+    title: "Sample Song",
+    uri: "",
+  });
 
+  /*
   const handleSubmit = async () => {
     if (input) {
       setLoading(true);
@@ -19,6 +25,42 @@ export default function Home() {
         console.error('Error fetching playlist:', error);
       }
       setLoading(false);
+    }
+  };
+  */
+
+  const handleSubmit = async () => {
+    if (input) {
+      setLoading(true);
+      try {
+        // Step 1: Get best-matching playlist
+        const res = await axios.post("/api/emotion", { input });
+        setBestMatch(res.data.primaryEmotion.label);
+        console.log(res.data.primaryEmotion.label);
+
+        // Step 2: Get a song from Spotify based on the emotion
+        const songRes = await axios.post("/api/get-song", { mood: res.data.primaryEmotion.label });
+
+        if (songRes.data && songRes.data.track) {
+          setSong({
+            image: songRes.data.track.image,
+            title: songRes.data.track.title,
+            uri: songRes.data.track.uri,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching song:", error);
+      }
+      setLoading(false);
+    }
+  };
+
+  const playSong = async () => {
+    if (!song.uri) return;
+    try {
+      await axios.post("/api/play-song", { trackUri: song.uri });
+    } catch (error) {
+      console.error("Error playing song:", error);
     }
   };
 
@@ -69,7 +111,7 @@ export default function Home() {
 
       {/* Current Song Component */}
       <div className="mt-8">
-        <CurrentSong song={mockSong} onPrev={() => {}} onNext={() => {}} />
+        <CurrentSong song={song} onPrev={() => {}} onNext={() => {}} onPlay={playSong} />
       </div>
     </div>
   );
