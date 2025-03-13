@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from 'axios';
+import CurrentSong from "@/components/currentSong";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -19,6 +20,12 @@ export default function Home() {
       }
       setLoading(false);
     }
+  };
+
+  // Mock song data (replace with actual data from API or state)
+  const mockSong = {
+    image: "/app/cover.jpg",
+    title: "Sample Song",
   };
 
   return (
@@ -59,6 +66,11 @@ export default function Home() {
           <p>{bestMatch}</p>
         </div>
       )}
+
+      {/* Current Song Component */}
+      <div className="mt-8">
+        <CurrentSong song={mockSong} onPrev={() => {}} onNext={() => {}} />
+      </div>
     </div>
   );
 }
